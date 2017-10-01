@@ -4,6 +4,8 @@ var options = {
   promiseLib: promise
 };
 
+var ENV = process.env
+
 var pgp = require('pg-promise')(options);
 var connectionString = ENV['DATABASE_URL'];
 var db = pgp(connectionString);
