@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS frcappserver;
+CREATE DATABASE frcappserver;

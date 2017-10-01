@@ -1,0 +1,3 @@
+{
+  "db": "postgres://localhost:5432/frcappserver"
+}
