@@ -19,7 +19,7 @@ function emitStudentHour(io, id, date) {
 }
 
 function getAllStudents(req, res, next) {
-  db.any('select * from students')
+  db.any('select * from students order by firstname')
     .then(function (data) {
       res.status(200)
         .json(data);
