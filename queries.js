@@ -134,7 +134,7 @@ function signoutStudent(req, res, next) {
 
 function getTodaysStudents(req, res, next) {
   var date = new Date();
-  db.any('SELECT * FROM students LEFT OUTER JOIN hours ON (sid = id AND date = \'$1-$2-$3\');',
+  db.any('SELECT * FROM students LEFT OUTER JOIN hours ON (sid = id AND date = \'$1-$2-$3\') ORDER BY firstname;',
     [date.getFullYear(), date.getMonth(), date.getDate()])
   .then(function (data) {
     res.status(200)
