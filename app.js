@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var basicAuth = require('express-basic-auth')
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -19,8 +20,17 @@ app.set('view engine', 'jade');
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
   next();
 });
+
+// app.use(basicAuth({
+//     users: {
+//         'admin': 'supersecret',
+//         'adam': 'password1234',
+//         'eve': 'asdfghjkl'
+//     }
+// }))
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

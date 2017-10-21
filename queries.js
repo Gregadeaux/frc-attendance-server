@@ -182,7 +182,7 @@ function late(req, res, next) {
 }
 
 function getAllSignins(req, res, next) {
-  db.any('select * from hours')
+  db.any('select * from hours LEFT OUTER JOIN students ON (sid = id)')
     .then(function (data) {
       res.status(200)
         .json(data);

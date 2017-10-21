@@ -1,3 +1,4 @@
 {
-  "db": "postgres://localhost:5432/frcappserver"
+  "db": "postgres://pzbtdwrgttqvsg:3da57dbd1b7f1030f2eb65cab3f051a12efb2701e10ad86063e943992e2f9f24@ec2-54-163-227-202.compute-1.amazonaws.com:5432/d3jo9m8tccerdf"
+  // "db": "postgres://localhost:5432/frcappserver"
 }

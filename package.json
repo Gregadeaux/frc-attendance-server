@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "scripts": {
-      "start": "nf start"
-    }
+    "start": "nf start"
   },
   "devDependencies": {
     "node-pg-migrate": "^2.9.0"
