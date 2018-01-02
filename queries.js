@@ -12,7 +12,7 @@ var db = pgp(connectionString);
 
 function emitStudentHour(io, id, date) {
   db.one('select * from students LEFT OUTER JOIN hours ON (sid = id AND date = \'$1-$2-$3\') where id = $4', 
-    [date.getFullYear(), date.getMonth(), date.getDate(), id])
+    [date.getFullYear(), date.getMonth()+1, date.getDate(), id])
     .then(function (student) {
       io.emit('message', student)
     })
@@ -92,7 +92,7 @@ function signinStudent(req, res, next) {
   db.one('insert into hours(date, sid, late)' +
     'values(\'$1-$2-$3\', $4, false)' +
     ' returning *',
-    [date.getFullYear(), date.getMonth(), date.getDate(), id])
+    [date.getFullYear(), date.getMonth()+1, date.getDate(), id])
     .then(function (data) {
       emitStudentHour(res.io, id, date)
       res.status(200)
@@ -112,7 +112,7 @@ function signoutStudent(req, res, next) {
   var id = parseInt(req.params.id);
   var date = new Date();
   db.result('delete from hours where sid = $1 and date=\'$2-$3-$4\'', 
-    [id, date.getFullYear(), date.getMonth(), date.getDate()])
+    [id, date.getFullYear(), date.getMonth()+1, date.getDate()])
   .then(function (result) {
     emitStudentHour(res.io, id, date)
     res.status(200)
@@ -135,7 +135,7 @@ function signoutStudent(req, res, next) {
 function getTodaysStudents(req, res, next) {
   var date = new Date();
   db.any('SELECT * FROM students LEFT OUTER JOIN hours ON (sid = id AND date = \'$1-$2-$3\') ORDER BY firstname;',
-    [date.getFullYear(), date.getMonth(), date.getDate()])
+    [date.getFullYear(), date.getMonth()+1, date.getDate()])
   .then(function (data) {
     res.status(200)
       .json(data);
@@ -148,7 +148,7 @@ function getTodaysStudents(req, res, next) {
 
 function getTodaysSignins(req, res, next) {
   var date = new Date();
-  db.any('select * from hours where date = \'$1-$2-$3\'', [date.getFullYear(), date.getMonth(), date.getDate()])
+  db.any('select * from hours where date = \'$1-$2-$3\'', [date.getFullYear(), date.getMonth()+1, date.getDate()])
     .then(function (data) {
       res.status(200)
         .json(data);
@@ -165,7 +165,7 @@ function late(req, res, next) {
     'values(\'$1-$2-$3\', $4, true)' +
     ' on conflict (date, sid) do update set late = true' +
     ' returning *',
-    [date.getFullYear(), date.getMonth(), date.getDate(), id])
+    [date.getFullYear(), date.getMonth()+1, date.getDate(), id])
     .then(function (data) {
       emitStudentHour(res.io, id, date)
       res.status(200)
