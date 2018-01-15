@@ -10,7 +10,14 @@ var pgp = require('pg-promise')(options);
 var connectionString = ENV['DATABASE_URL'];
 var db = pgp(connectionString);
 
+Date.prototype.addHours = function(h) {    
+   this.setTime(this.getTime() + (h*60*60*1000)); 
+   return this;   
+}
+
+
 function emitStudentHour(io, id, date) {
+  date.addHours(18)
   db.one('select * from students LEFT OUTER JOIN hours ON (sid = id AND date = \'$1-$2-$3\') where id = $4', 
     [date.getFullYear(), date.getMonth()+1, date.getDate(), id])
     .then(function (student) {
@@ -89,6 +96,7 @@ function removeStudent(req, res, next) {
 function signinStudent(req, res, next) {
   var id = parseInt(req.params.id);
   var date = new Date();
+  date.addHours(18)
   db.one('insert into hours(date, sid, late)' +
     'values(\'$1-$2-$3\', $4, false)' +
     ' returning *',
@@ -111,6 +119,7 @@ function signinStudent(req, res, next) {
 function signoutStudent(req, res, next) {
   var id = parseInt(req.params.id);
   var date = new Date();
+  date.addHours(18)
   db.result('delete from hours where sid = $1 and date=\'$2-$3-$4\'', 
     [id, date.getFullYear(), date.getMonth()+1, date.getDate()])
   .then(function (result) {
@@ -134,6 +143,7 @@ function signoutStudent(req, res, next) {
 
 function getTodaysStudents(req, res, next) {
   var date = new Date();
+  date.addHours(18)
   db.any('SELECT * FROM students LEFT OUTER JOIN hours ON (sid = id AND date = \'$1-$2-$3\') ORDER BY firstname;',
     [date.getFullYear(), date.getMonth()+1, date.getDate()])
   .then(function (data) {
@@ -148,6 +158,7 @@ function getTodaysStudents(req, res, next) {
 
 function getTodaysSignins(req, res, next) {
   var date = new Date();
+  date.addHours(18)
   db.any('select * from hours where date = \'$1-$2-$3\'', [date.getFullYear(), date.getMonth()+1, date.getDate()])
     .then(function (data) {
       res.status(200)
@@ -161,6 +172,7 @@ function getTodaysSignins(req, res, next) {
 function late(req, res, next) {
   var id = parseInt(req.params.id);
   var date = new Date();
+  date.addHours(18)
   db.one('insert into hours(date, sid, late)' +
     'values(\'$1-$2-$3\', $4, true)' +
     ' on conflict (date, sid) do update set late = true' +
